@@ -10,3 +10,36 @@ class EmailHelper {
         (email.endsWith('.com') || email.endsWith('.vn'));
   }
 }
+
+
+class PasswordHelper {
+  static bool isPasswordValid(String password) {
+    // Triển khai kiểm tra mật khẩu ở đây
+    String pattern = r'^.{6,}$';
+    RegExp regex = RegExp(pattern);
+    return regex.hasMatch(password);
+  }
+
+    static bool isPasswordMatch(String password, String confirmPassword) {
+    return password == confirmPassword;
+  }
+
+  static bool isPasswordStrong(String password) {
+    return password.length >= 6;
+  }
+}
+
+class UserHelper {
+  static Future<bool> checkUserlExist(String email) async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('database')
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
+      return querySnapshot.docs.isNotEmpty;
+    } catch (e) {
+      return false;
+    }
+  }
+}
